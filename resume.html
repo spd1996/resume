@@ -1,0 +1,160 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Suraj Prakash | IITian Portfolio</title>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&family=Cinzel:wght@700&display=swap" rel="stylesheet">
+  <style>
+    *{margin:0;padding:0;box-sizing:border-box;}
+    body{font-family:'Poppins',sans-serif;background:#0c0c0f;color:#fff;overflow-x:hidden;}
+
+    /* Elegant gradient background */
+    body::before{
+      content:"";position:fixed;top:0;left:0;width:100%;height:100%;
+      background:linear-gradient(120deg,#000,#1a1a2e,#000);
+      z-index:-2;
+    }
+
+    /* Floating ribbons */
+    .ribbon{
+      position:fixed;width:150%;height:150%;top:-25%;left:-25%;
+      background:conic-gradient(from 180deg,#ffd70033,#ff4d6d33,#9d4dff33,#40c9ff33,#ffd70033);
+      animation:spin 40s linear infinite;z-index:-3;filter:blur(100px);
+    }
+    @keyframes spin{from{transform:rotate(0);}to{transform:rotate(360deg);}}
+
+    nav{position:fixed;top:0;width:100%;display:flex;justify-content:center;gap:30px;
+        padding:15px;background:rgba(0,0,0,0.5);backdrop-filter:blur(15px);z-index:1000;}
+    nav a{color:#fff;text-decoration:none;font-weight:600;transition:.3s;}
+    nav a:hover{color:#ffd700;}
+
+    /* Hero Section */
+    header{height:100vh;display:flex;flex-direction:column;justify-content:center;align-items:center;text-align:center;}
+    header h1{font-size:3.5rem;font-family:'Cinzel',serif;background:linear-gradient(90deg,#ffd700,#fff);
+              -webkit-background-clip:text;color:transparent;text-shadow:0 0 15px #ffd700;}
+    header h2{font-size:1.3rem;color:#ccc;}
+    .subtitle{margin-top:10px;color:#ffd700;font-weight:600;letter-spacing:1px;}
+
+    /* IIT Badge */
+    .iit-badge{
+      margin-top:30px;width:180px;height:180px;border-radius:50%;
+      background:radial-gradient(circle,#ffd700,#b8860b);
+      display:flex;align-items:center;justify-content:center;
+      font-weight:700;font-size:1.2rem;color:#000;
+      box-shadow:0 0 40px #ffd700,0 0 80px #ffd70055;
+      animation:pulse 3s infinite;
+    }
+    @keyframes pulse{0%,100%{transform:scale(1);}50%{transform:scale(1.05);} }
+
+    section{padding:100px 10%;}
+    section h2{text-align:center;font-size:2.5rem;color:#ffd700;margin-bottom:40px;}
+
+    /* Panels */
+    .panel{background:rgba(255,255,255,0.06);border-radius:20px;padding:30px;margin:20px auto;backdrop-filter:blur(20px);
+           box-shadow:0 8px 25px rgba(0,0,0,.6);transition:.3s;}
+    .panel:hover{transform:translateY(-5px);}
+
+    /* Skills as golden chips */
+    .skills{display:flex;flex-wrap:wrap;justify-content:center;gap:20px;}
+    .chip{padding:15px 25px;border:2px solid #ffd700;border-radius:12px;
+          background:rgba(255,215,0,0.1);box-shadow:0 0 20px #ffd70055;transition:.3s;}
+    .chip:hover{background:rgba(255,215,0,0.2);box-shadow:0 0 25px #ffd700;transform:scale(1.1);}
+
+    /* Experience timeline */
+    .timeline{position:relative;margin:40px auto;width:80%;border-left:2px solid #ffd700;}
+    .node{position:relative;margin:40px 0;padding-left:30px;}
+    .node::before{content:"";position:absolute;left:-12px;top:0;width:20px;height:20px;border-radius:50%;
+      background:#ffd700;box-shadow:0 0 20px #ffd700;}
+    .node h3{color:#ffd700;margin-bottom:5px;}
+
+    /* Achievements like trophies */
+    .achievements{display:flex;flex-wrap:wrap;justify-content:center;gap:25px;}
+    .badge{padding:20px 30px;border-radius:12px;background:linear-gradient(135deg,#ffd700,#ffae42);
+           color:#000;font-weight:700;box-shadow:0 5px 25px rgba(0,0,0,.6);transition:.3s;}
+    .badge:hover{transform:scale(1.1) rotate(-2deg);}
+
+    footer{padding:40px;text-align:center;background:rgba(0,0,0,0.7);}
+    footer a{color:#ffd700;margin:0 12px;font-size:1.3rem;transition:.3s;}
+    footer a:hover{color:#ff4d6d;}
+  </style>
+</head>
+<body>
+  <div class="ribbon"></div>
+
+  <nav>
+    <a href="#about">About</a><a href="#skills">Skills</a><a href="#experience">Experience</a>
+    <a href="#projects">Projects</a><a href="#achievements">Achievements</a>
+    <a href="#education">Education</a><a href="#contact">Contact</a>
+  </nav>
+
+  <!-- Hero -->
+  <header>
+    <h1>Suraj Prakash</h1>
+    <h2>Senior Node.js & Full-Stack Developer</h2>
+    <div class="subtitle">Engineer • Innovator • Proud IITian</div>
+    <div class="iit-badge">IIT<br>Guwahati</div>
+  </header>
+
+  <!-- About -->
+  <section id="about"><div class="panel"><h2>About Me</h2>
+    <p>I’m a Full-Stack Developer with expertise in Node.js, React, AWS, and scalable systems. Being an IITian (IIT Guwahati, B.Tech EEE) gives me not just technical skills but also the perseverance and innovation mindset to solve complex challenges.</p></div>
+  </section>
+
+  <!-- Skills -->
+  <section id="skills"><h2>Skills</h2>
+    <div class="skills">
+      <div class="chip">JavaScript/TypeScript</div>
+      <div class="chip">Node.js</div>
+      <div class="chip">React</div>
+      <div class="chip">Python</div>
+      <div class="chip">C++</div>
+      <div class="chip">AWS</div>
+      <div class="chip">Databases</div>
+      <div class="chip">Machine Learning</div>
+    </div>
+  </section>
+
+  <!-- Experience -->
+  <section id="experience"><h2>Experience</h2>
+    <div class="timeline">
+      <div class="node"><h3>HTC Global Services</h3><p>Senior Node.js Dev | 2024–Present</p></div>
+      <div class="node"><h3>Stackbox Services</h3><p>Full Stack Dev | 2021–2024</p></div>
+      <div class="node"><h3>Vashishtha Research</h3><p>Scientific Software Dev | 2019–2021</p></div>
+      <div class="node"><h3>poboT Labs</h3><p>Assoc Research Eng | 2019</p></div>
+    </div>
+  </section>
+
+  <!-- Projects -->
+  <section id="projects"><h2>Projects</h2>
+    <div class="panel"><h3>Lock-in Amplifier</h3><p>Extracting weak signals buried in noise.</p></div>
+    <div class="panel"><h3>Bluetooth Robot</h3><p>Arduino robot controlled via Android.</p></div>
+    <div class="panel"><h3>Gender Detection</h3><p>ML-based speech analysis.</p></div>
+  </section>
+
+  <!-- Achievements -->
+  <section id="achievements"><h2>Achievements</h2>
+    <div class="achievements">
+      <div class="badge">🏆 KVPY Scholar (AIR 181)</div>
+      <div class="badge">🎓 IISc Selection</div>
+      <div class="badge">🛡️ SCRA UPSC Interview</div>
+      <div class="badge">🔥 JEE Advanced AIR 1919</div>
+    </div>
+  </section>
+
+  <!-- Education -->
+  <section id="education"><h2>Education</h2>
+    <div class="panel"><h3>IIT Guwahati</h3><p>B.Tech EEE | 2015–2019 | CGPA 7.01</p></div>
+    <div class="panel"><h3>Vidya Niketan</h3><p>Senior Secondary | 2015 | 93.8%</p></div>
+  </section>
+
+  <!-- Contact -->
+  <section id="contact"><h2>Contact</h2>
+    <div class="panel"><p>📧 surajprakash597@gmail.com | 📞 +91-7643861719 | 📍 Bangalore, India</p>
+    <p><a href="https://linkedin.com/in/suraj597" target="_blank">LinkedIn</a> | <a href="https://github.com/spd1996" target="_blank">GitHub</a></p></div>
+  </section>
+
+  <footer><p>© 2025 Suraj Prakash | Prestige IITian Portfolio 🎖️</p></footer>
+</body>
+</html>
+ 
