@@ -156,5 +156,398 @@
 
   <footer><p>© 2025 Suraj Prakash | Prestige IITian Portfolio 🎖️</p></footer>
 </body>
+</html><!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Suraj Prakash | Cosmic IITian Portfolio</title>
+  <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700&family=Roboto+Mono:wght@400;600&display=swap" rel="stylesheet">
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r134/three.min.js"></script>
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body {
+      font-family: 'Roboto Mono', monospace;
+      background: #0a0a1a;
+      color: #e0e0ff;
+      overflow-x: hidden;
+      position: relative;
+    }
+
+    /* Cyberpunk-inspired background with WebGL particles */
+    #particles {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      z-index: -1;
+    }
+
+    /* Neon glow effect */
+    .neon-glow {
+      text-shadow: 0 0 10px #00ffcc, 0 0 20px #00ffcc, 0 0 30px #00ffcc;
+    }
+
+    /* Navigation */
+    nav {
+      position: fixed;
+      top: 0;
+      width: 100%;
+      display: flex;
+      justify-content: center;
+      gap: 25px;
+      padding: 15px;
+      background: rgba(10, 10, 26, 0.8);
+      backdrop-filter: blur(10px);
+      z-index: 1000;
+    }
+    nav a {
+      color: #00ffcc;
+      text-decoration: none;
+      font-family: 'Orbitron', sans-serif;
+      font-weight: 600;
+      transition: 0.3s;
+      position: relative;
+    }
+    nav a::after {
+      content: '';
+      position: absolute;
+      width: 0;
+      height: 2px;
+      background: #ff007a;
+      bottom: -5px;
+      left: 0;
+      transition: 0.3s;
+    }
+    nav a:hover::after { width: 100%; }
+    nav a:hover { color: #ff007a; }
+
+    /* Hero Section */
+    header {
+      height: 100vh;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      text-align: center;
+      position: relative;
+    }
+    header h1 {
+      font-family: 'Orbitron', sans-serif;
+      font-size: 4.5rem;
+      color: #00ffcc;
+      animation: flicker 3s infinite;
+    }
+    @keyframes flicker {
+      0%, 100% { opacity: 1; }
+      50% { opacity: 0.7; }
+    }
+    header h2 {
+      font-size: 1.5rem;
+      color: #ff007a;
+      margin: 10px 0;
+    }
+    .subtitle {
+      font-size: 1.2rem;
+      color: #e0e0ff;
+      letter-spacing: 2px;
+    }
+    .iit-orb {
+      margin-top: 30px;
+      width: 200px;
+      height: 200px;
+      background: radial-gradient(circle, #00ffcc, #ff007a);
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-family: 'Orbitron', sans-serif;
+      font-size: 1.3rem;
+      color: #fff;
+      box-shadow: 0 0 50px #00ffcc, 0 0 100px #ff007a;
+      animation: orbit 5s infinite linear;
+    }
+    @keyframes orbit {
+      0% { transform: rotate(0deg); }
+      100% { transform: rotate(360deg); }
+    }
+
+    /* Sections */
+    section {
+      padding: 100px 10%;
+      position: relative;
+      z-index: 2;
+    }
+    section h2 {
+      font-family: 'Orbitron', sans-serif;
+      font-size: 2.8rem;
+      color: #00ffcc;
+      text-align: center;
+      margin-bottom: 40px;
+      animation: fadeIn 1s ease-in;
+    }
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(20px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    /* Panels with holographic effect */
+    .panel {
+      background: rgba(0, 255, 204, 0.1);
+      border: 1px solid #00ffcc;
+      border-radius: 15px;
+      padding: 30px;
+      margin: 20px auto;
+      box-shadow: 0 0 20px rgba(0, 255, 204, 0.3);
+      transition: 0.3s;
+      position: relative;
+      overflow: hidden;
+    }
+    .panel::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: -100%;
+      width: 100%;
+      height: 100%;
+      background: linear-gradient(90deg, transparent, rgba(0, 255, 204, 0.2), transparent);
+      transition: 0.5s;
+    }
+    .panel:hover::before { left: 100%; }
+    .panel:hover { transform: translateY(-10px); }
+
+    /* Skills as holographic cards */
+    .skills {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+      gap: 20px;
+    }
+    .skill-card {
+      padding: 15px 30px;
+      background: rgba(0, 255, 204, 0.1);
+      border: 2px solid #00ffcc;
+      border-radius: 10px;
+      color: #00ffcc;
+      font-weight: 600;
+      transition: 0.3s;
+      position: relative;
+      cursor: pointer;
+    }
+    .skill-card:hover {
+      background: rgba(255, 0, 122, 0.2);
+      border-color: #ff007a;
+      transform: scale(1.1) rotate(-3deg);
+      box-shadow: 0 0 30px rgba(255, 0, 122, 0.5);
+    }
+
+    /* Experience timeline with neon nodes */
+    .timeline {
+      position: relative;
+      margin: 40px auto;
+      width: 80%;
+      border-left: 3px solid #ff007a;
+    }
+    .node {
+      position: relative;
+      margin: 40px 0;
+      padding-left: 40px;
+      opacity: 0;
+      animation: slideIn 1s ease forwards;
+      animation-delay: calc(0.2s * var(--i));
+    }
+    .node::before {
+      content: '';
+      position: absolute;
+      left: -12px;
+      top: 0;
+      width: 24px;
+      height: 24px;
+      background: #ff007a;
+      border-radius: 50%;
+      box-shadow: 0 0 20px #ff007a, 0 0 40px #ff007a;
+    }
+    .node h3 { color: #00ffcc; margin-bottom: 10px; }
+    @keyframes slideIn {
+      from { opacity: 0; transform: translateX(-50px); }
+      to { opacity: 1; transform: translateX(0); }
+    }
+
+    /* Achievements as neon badges */
+    .achievements {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+      gap: 25px;
+    }
+    .badge {
+      padding: 20px 30px;
+      background: linear-gradient(135deg, #00ffcc, #ff007a);
+      border-radius: 10px;
+      color: #fff;
+      font-weight: 600;
+      box-shadow: 0 0 20px rgba(0, 255, 204, 0.5);
+      transition: 0.3s;
+    }
+    .badge:hover {
+      transform: scale(1.1) rotate(5deg);
+      box-shadow: 0 0 40px rgba(255, 0, 122, 0.7);
+    }
+
+    /* Footer */
+    footer {
+      padding: 40px;
+      text-align: center;
+      background: rgba(10, 10, 26, 0.9);
+    }
+    footer a {
+      color: #00ffcc;
+      margin: 0 15px;
+      font-size: 1.5rem;
+      transition: 0.3s;
+    }
+    footer a:hover { color: #ff007a; }
+  </style>
+</head>
+<body>
+  <!-- WebGL Particle Background -->
+  <canvas id="particles"></canvas>
+
+  <!-- Navigation -->
+  <nav>
+    <a href="#about">About</a>
+    <a href="#skills">Skills</a>
+    <a href="#experience">Experience</a>
+    <a href="#projects">Projects</a>
+    <a href="#achievements">Achievements</a>
+    <a href="#education">Education</a>
+    <a href="#contact">Contact</a>
+  </nav>
+
+  <!-- Hero Section -->
+  <header>
+    <h1 class="neon-glow">Suraj Prakash</h1>
+    <h2>Full-Stack Developer & Cosmic Innovator</h2>
+    <div class="subtitle">Engineer • Visionary • IIT Guwahati Alumnus</div>
+    <div class="iit-orb">IIT Guwahati</div>
+  </header>
+
+  <!-- About -->
+  <section id="about">
+    <h2 class="neon-glow">About Me</h2>
+    <div class="panel">
+      <p>I’m a Full-Stack Developer with a passion for crafting scalable, futuristic solutions using Node.js, React, and AWS. As an IIT Guwahati B.Tech (EEE) graduate, I combine technical prowess with a visionary mindset to tackle complex challenges and innovate relentlessly.</p>
+    </div>
+  </section>
+
+  <!-- Skills -->
+  <section id="skills">
+    <h2 class="neon-glow">Skills</h2>
+    <div class="skills">
+      <div class="skill-card">JavaScript/TypeScript</div>
+      <div class="skill-card">Node.js</div>
+      <div class="skill-card">React</div>
+      <div class="skill-card">Python</div>
+      <div class="skill-card">C++</div>
+      <div class="skill-card">AWS</div>
+      <div class="skill-card">Databases</div>
+      <div class="skill-card">Machine Learning</div>
+    </div>
+  </section>
+
+  <!-- Experience -->
+  <section id="experience">
+    <h2 class="neon-glow">Experience</h2>
+    <div class="timeline">
+      <div class="node" style="--i: 1"><h3>HTC Global Services</h3><p>Senior Node.js Developer | 2024–Present</p></div>
+      <div class="node" style="--i: 2"><h3>Stackbox Services</h3><p>Full Stack Developer | 2021–2024</p></div>
+      <div class="node" style="--i: 3"><h3>Vashishtha Research</h3><p>Scientific Software Developer | 2019–2021</p></div>
+      <div class="node" style="--i: 4"><h3>poboT Labs</h3><p>Associate Research Engineer | 2019</p></div>
+    </div>
+  </section>
+
+  <!-- Projects -->
+  <section id="projects">
+    <h2 class="neon-glow">Projects</h2>
+    <div class="panel"><h3>Lock-in Amplifier</h3><p>Extracting weak signals buried in noise using advanced signal processing.</p></div>
+    <div class="panel"><h3>Bluetooth Robot</h3><p>Arduino-powered robot controlled via Android app.</p></div>
+    <div class="panel"><h3>Gender Detection</h3><p>ML-based speech analysis for gender identification.</p></div>
+  </section>
+
+  <!-- Achievements -->
+  <section id="achievements">
+    <h2 class="neon-glow">Achievements</h2>
+    <div class="achievements">
+      <div class="badge">🏆 KVPY Scholar (AIR 181)</div>
+      <div class="badge">🎓 IISc Selection</div>
+      <div class="badge">🛡️ SCRA UPSC Interview</div>
+      <div class="badge">🔥 JEE Advanced AIR 1919</div>
+    </div>
+  </section>
+
+  <!-- Education -->
+  <section id="education">
+    <h2 class="neon-glow">Education</h2>
+    <div class="panel"><h3>IIT Guwahati</h3><p>B.Tech EEE | 2015–2019 | CGPA 7.01</p></div>
+    <div class="panel"><h3>Vidya Niketan</h3><p>Senior Secondary | 2015 | 93.8%</p></div>
+  </section>
+
+  <!-- Contact -->
+  <section id="contact">
+    <h2 class="neon-glow">Contact</h2>
+    <div class="panel">
+      <p>📧 surajprakash597@gmail.com | 📞 +91-7643861719 | 📍 Bangalore, India</p>
+      <p><a href="https://linkedin.com/in/suraj597" target="_blank">LinkedIn</a> | <a href="https://github.com/spd1996" target="_blank">GitHub</a></p>
+    </div>
+  </section>
+
+  <!-- Footer -->
+  <footer>
+    <p>© 2025 Suraj Prakash | Cosmic IITian Portfolio 🌌</p>
+    <a href="https://linkedin.com/in/suraj597" target="_blank">LinkedIn</a>
+    <a href="https://github.com/spd1996" target="_blank">GitHub</a>
+  </footer>
+
+  <!-- WebGL Particle Animation -->
+  <script>
+    const scene = new THREE.Scene();
+    const camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
+    const renderer = new THREE.WebGLRenderer({ canvas: document.getElementById('particles'), alpha: true });
+    renderer.setSize(window.innerWidth, window.innerHeight);
+
+    const particles = new THREE.BufferGeometry();
+    const particleCount = 5000;
+    const posArray = new Float32Array(particleCount * 3);
+
+    for (let i = 0; i < particleCount * 3; i++) {
+      posArray[i] = (Math.random() - 0.5) * 2000;
+    }
+
+    particles.setAttribute('position', new THREE.BufferAttribute(posArray, 3));
+    const material = new THREE.PointsMaterial({
+      size: 2,
+      color: 0x00ffcc,
+      transparent: true,
+      opacity: 0.6
+    });
+
+    const particleSystem = new THREE.Points(particles, material);
+    scene.add(particleSystem);
+    camera.position.z = 500;
+
+    function animate() {
+      requestAnimationFrame(animate);
+      particleSystem.rotation.y += 0.001;
+      renderer.render(scene, camera);
+    }
+    animate();
+
+    window.addEventListener('resize', () => {
+      camera.aspect = window.innerWidth / window.innerHeight;
+      camera.updateProjectionMatrix();
+      renderer.setSize(window.innerWidth, window.innerHeight);
+    });
+  </script>
+</body>
 </html>
- 
