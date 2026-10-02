@@ -1,274 +1,689 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Suraj Prakash | IITian Portfolio</title>
-  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&family=Cinzel:wght@700&display=swap" rel="stylesheet">
-  <style>
-    *{margin:0;padding:0;box-sizing:border-box;}
-    body{font-family:'Poppins',sans-serif;background:#0c0c0f;color:#fff;overflow-x:hidden;}
+<title>Suraj Prakash 3D</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Archivo:wdth,wght@75..125,400..800&family=Public+Sans:wght@400;500;600&family=JetBrains+Mono:wght@400;500;700&display=swap">
+<style>
+  /* Layout: full-bleed 3D circuit board (black solder mask, gold traces). Each resume section is a chip.
+     Overlay: name block top-left, reading panel on the right (bottom sheet on phones), chip selector along the bottom.
+     Single committed dark look. */
+  :root {
+    --bg: #07090b;
+    --panel: rgba(13, 16, 20, 0.84);
+    --line: rgba(230, 178, 90, 0.2);
+    --fg: #ede8de;
+    --soft: #aaa59c;
+    --faint: #706b63;
+    --gold: #e6b25a;
+    --gold-deep: #2b2115;
+    --display: "Archivo", "Helvetica Neue", Arial, sans-serif;
+    --body: "Public Sans", "Segoe UI", system-ui, sans-serif;
+    --mono: "JetBrains Mono", ui-monospace, "SFMono-Regular", Menlo, monospace;
+    color-scheme: dark;
+  }
+  html, body { height: 100%; }
+  body { background: var(--bg); color: var(--fg); font-family: var(--body); font-size: 15px; line-height: 1.55; overflow: hidden; }
+  * { box-sizing: border-box; }
+  #board { position: fixed; inset: 0; width: 100%; height: 100%; display: block; touch-action: none; outline: none; }
+  a { color: inherit; text-decoration-color: var(--gold); text-underline-offset: 3px; }
+  a:hover { color: var(--gold); }
+  button { font: inherit; color: inherit; }
+  a:focus-visible, button:focus-visible { outline: 2px solid var(--gold); outline-offset: 2px; }
 
-    body::before{
-      content:"";position:fixed;top:0;left:0;width:100%;height:100%;
-      background:linear-gradient(120deg,#000,#1a1a2e,#000);
-      z-index:-2;
-    }
+  /* name block */
+  .brand { position: fixed; top: calc(20px + env(safe-area-inset-top, 0px)); left: 24px; max-width: min(460px, calc(100% - 48px)); pointer-events: none; }
+  .brand .tag { font-family: var(--mono); font-size: 0.7rem; letter-spacing: 0.16em; text-transform: uppercase; color: var(--gold); }
+  .brand h1 { font-family: var(--display); font-stretch: 125%; font-weight: 800; font-size: clamp(1.8rem, 4.2vw, 3.2rem); line-height: 0.95; letter-spacing: -0.02em; margin: 6px 0 6px; text-wrap: balance; text-shadow: 0 2px 24px rgba(0,0,0,.6); }
+  .brand p { margin: 0; color: var(--soft); font-family: var(--display); font-weight: 500; }
+  .brand .hint { font-family: var(--mono); font-size: 0.68rem; color: var(--faint); margin-top: 10px; }
 
-    .ribbon{
-      position:fixed;width:150%;height:150%;top:-25%;left:-25%;
-      background:conic-gradient(from 180deg,#ffd70033,#ff4d6d33,#9d4dff33,#40c9ff33,#ffd70033);
-      animation:spin 40s linear infinite;z-index:-3;filter:blur(100px);
-    }
-    @keyframes spin{from{transform:rotate(0);}to{transform:rotate(360deg);} }
+  /* reading panel */
+  .panel {
+    position: fixed; top: calc(20px + env(safe-area-inset-top, 0px)); right: 20px; bottom: 84px; width: 390px;
+    background: var(--panel); border: 1px solid var(--line); border-radius: 10px;
+    backdrop-filter: blur(14px); -webkit-backdrop-filter: blur(14px);
+    display: grid; grid-template-rows: 1fr auto; overflow: hidden;
+  }
+  .panel-body { overflow-y: auto; padding: 24px 24px 20px; min-height: 0; }
+  .panel-foot { display: flex; justify-content: space-between; gap: 8px; padding: 10px 14px; border-top: 1px solid var(--line); }
+  .step { background: none; border: 0; cursor: pointer; font-family: var(--mono); font-size: 0.72rem; color: var(--soft); padding: 6px 8px; border-radius: 4px; }
+  .step:hover { color: var(--gold); }
+  .eyebrow { font-family: var(--mono); font-size: 0.7rem; letter-spacing: 0.14em; text-transform: uppercase; color: var(--gold); display: flex; gap: 10px; align-items: center; }
+  .eyebrow::after { content: ""; flex: 1; height: 1px; background: var(--line); }
+  .panel h2 { font-family: var(--display); font-stretch: 112%; font-weight: 800; font-size: 1.75rem; line-height: 1.05; margin: 10px 0 14px; letter-spacing: -0.01em; text-wrap: balance; }
+  .panel h3 { font-family: var(--display); font-stretch: 105%; font-weight: 700; font-size: 1.02rem; margin: 0; }
+  .panel p { margin: 0 0 12px; }
+  .muted { color: var(--soft); }
+  .mono { font-family: var(--mono); font-size: 0.76rem; color: var(--soft); font-variant-numeric: tabular-nums; }
 
-    /* Desktop Navbar */
-    nav{position:fixed;top:0;width:100%;display:flex;justify-content:center;gap:20px;
-        padding:12px;background:rgba(0,0,0,0.5);backdrop-filter:blur(15px);z-index:1000;}
-    nav a{color:#fff;text-decoration:none;font-weight:600;transition:.3s;font-size:0.95rem;}
-    nav a:hover{color:#ffd700;}
+  .facts { display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px; margin: 18px 0; }
+  .fact { border: 1px solid var(--line); border-radius: 6px; padding: 10px; }
+  .fact strong { display: block; font-family: var(--display); font-stretch: 85%; font-weight: 800; font-size: 1.6rem; line-height: 1; color: var(--gold); font-variant-numeric: tabular-nums; }
+  .fact span { font-family: var(--mono); font-size: 0.62rem; letter-spacing: 0.06em; text-transform: uppercase; color: var(--faint); }
+  .cta { display: flex; flex-wrap: wrap; gap: 8px; }
+  .btn { display: inline-block; font-family: var(--mono); font-size: 0.74rem; text-decoration: none; padding: 7px 12px; border-radius: 5px; border: 1px solid var(--line); background: transparent; cursor: pointer; white-space: nowrap; }
+  .btn.solid { background: var(--gold); color: #120d05; border-color: var(--gold); }
+  .btn:hover { border-color: var(--gold); color: var(--gold); }
+  .btn.solid:hover { background: #f2c87d; color: #120d05; }
 
-    /* Sidebar */
-    .sidebar{
-      position:fixed;top:0;left:-250px;width:250px;height:100%;
-      background:rgba(0,0,0,0.9);backdrop-filter:blur(15px);
-      padding:60px 20px;transition:0.3s;z-index:1200;display:flex;flex-direction:column;gap:20px;
-    }
-    .sidebar a{color:#fff;text-decoration:none;font-weight:600;font-size:1rem;transition:.3s;}
-    .sidebar a:hover{color:#ffd700;}
-    .sidebar.active{left:0;}
+  .list { list-style: none; margin: 0; padding: 0; display: grid; }
+  .list > li { padding: 14px 0; border-top: 1px solid var(--line); display: grid; gap: 3px; }
+  .list > li:first-child { border-top: 0; padding-top: 4px; }
+  .row { display: flex; justify-content: space-between; align-items: baseline; gap: 12px; flex-wrap: wrap; }
+  .now { font-family: var(--mono); font-size: 0.6rem; letter-spacing: 0.1em; text-transform: uppercase; color: #120d05; background: var(--gold); padding: 1px 6px; border-radius: 3px; margin-left: 6px; vertical-align: 2px; }
+  .chips { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 6px; }
+  .chip { font-size: 0.82rem; padding: 3px 10px; border-radius: 4px; border: 1px solid var(--line); }
+  .chip.core { background: var(--gold-deep); border-color: var(--gold); }
+  .group + .group { margin-top: 16px; }
+  .k { font-family: var(--mono); font-size: 0.66rem; letter-spacing: 0.1em; text-transform: uppercase; color: var(--faint); }
+  .rank { display: grid; grid-template-columns: 4.2ch 1fr; gap: 14px; align-items: baseline; }
+  .rank b.n { font-family: var(--display); font-stretch: 75%; font-weight: 800; font-size: 1.7rem; color: var(--gold); text-align: right; line-height: 1; font-variant-numeric: tabular-nums; }
+  .rank b.n.w { font-size: 1.05rem; font-stretch: 100%; }
+  .contact li { grid-template-columns: 74px 1fr; display: grid; align-items: baseline; }
+  .v { user-select: all; overflow-wrap: anywhere; }
+  .copy { background: none; border: 0; color: var(--gold); font-family: var(--mono); font-size: 0.66rem; cursor: pointer; padding: 0 0 0 8px; }
 
-    /* Overlay */
-    .overlay{
-      position:fixed;top:0;left:0;width:100%;height:100%;
-      background:rgba(0,0,0,0.6);z-index:1100;display:none;
-    }
-    .overlay.active{display:block;}
+  /* chip selector */
+  .nav {
+    position: fixed; left: 20px; right: 20px; bottom: calc(20px + env(safe-area-inset-bottom, 0px));
+    display: flex; gap: 6px; overflow-x: auto; scrollbar-width: none; padding: 2px;
+  }
+  .nav::-webkit-scrollbar { display: none; }
+  .nav button {
+    flex: none; display: flex; gap: 8px; align-items: baseline; cursor: pointer;
+    background: var(--panel); border: 1px solid var(--line); border-radius: 6px; padding: 8px 12px;
+    backdrop-filter: blur(10px); -webkit-backdrop-filter: blur(10px); font-size: 0.82rem;
+  }
+  .nav button span { font-family: var(--mono); font-size: 0.66rem; color: var(--gold); }
+  .nav button[aria-current="true"] { background: var(--gold); color: #120d05; border-color: var(--gold); }
+  .nav button[aria-current="true"] span { color: #120d05; }
+  .nav .home { margin-left: auto; }
 
-    /* Hamburger */
-    .hamburger{
-      position:fixed;top:15px;left:15px;z-index:1300;cursor:pointer;
-      display:none;flex-direction:column;gap:5px;
-    }
-    .hamburger div{width:25px;height:3px;background:#ffd700;border-radius:2px;}
+  @media (max-width: 760px) {
+    .brand { top: calc(14px + env(safe-area-inset-top, 0px)); left: 16px; }
+    .brand h1 { font-size: 1.7rem; }
+    .brand .hint { display: none; }
+    .panel { top: auto; left: 12px; right: 12px; width: auto; bottom: calc(64px + env(safe-area-inset-bottom, 0px)); height: 46%; }
+    .panel-body { padding: 18px 18px 14px; }
+    .panel h2 { font-size: 1.4rem; }
+    .nav { left: 12px; right: 12px; bottom: calc(12px + env(safe-area-inset-bottom, 0px)); }
+    .nav .home { margin-left: 0; }
+  }
+</style>
 
-    /* Hero Section */
-    header{height:100vh;display:flex;flex-direction:column;justify-content:center;align-items:center;text-align:center;padding:0 10px;}
-    header h1{font-size:3.2rem;font-family:'Cinzel',serif;background:linear-gradient(90deg,#ffd700,#fff);
-              -webkit-background-clip:text;color:transparent;text-shadow:0 0 15px #ffd700;}
-    header h2{font-size:1.2rem;color:#ccc;}
-    .subtitle{margin-top:10px;color:#ffd700;font-weight:600;letter-spacing:1px;}
+<canvas id="board" aria-label="3D circuit board: each chip is a section of Suraj Prakash's resume"></canvas>
 
-    .iit-badge{
-      margin-top:25px;width:150px;height:150px;border-radius:50%;
-      background:radial-gradient(circle,#ffd700,#b8860b);
-      display:flex;align-items:center;justify-content:center;
-      font-weight:700;font-size:1rem;color:#000;
-      box-shadow:0 0 40px #ffd700,0 0 80px #ffd70055;
-      animation:pulse 3s infinite;
-    }
-    @keyframes pulse{0%,100%{transform:scale(1);}50%{transform:scale(1.05);} }
+<div class="brand">
+  <div class="tag">Resume board · Rev 2026</div>
+  <h1>Suraj Prakash</h1>
+  <p>Senior Node.js &amp; Full-Stack Developer · Hyderabad</p>
+  <div class="hint">Click a chip to read it · drag to rotate · scroll to zoom</div>
+</div>
 
-    section{padding:80px 7%;}
-    section h2{text-align:center;font-size:2rem;color:#ffd700;margin-bottom:30px;}
-
-    .panel{background:rgba(255,255,255,0.06);border-radius:20px;padding:25px;margin:20px auto;backdrop-filter:blur(20px);
-           box-shadow:0 8px 25px rgba(0,0,0,.6);transition:.3s;}
-    .panel:hover{transform:translateY(-5px);}
-
-    .skills{display:flex;flex-wrap:wrap;justify-content:center;gap:15px;}
-    .chip{padding:12px 18px;border:2px solid #ffd700;border-radius:12px;
-          background:rgba(255,215,0,0.1);box-shadow:0 0 20px #ffd70055;transition:.3s;font-size:0.9rem;}
-    .chip:hover{background:rgba(255,215,0,0.2);box-shadow:0 0 25px #ffd700;transform:scale(1.1);}
-
-    .timeline{position:relative;margin:30px auto;width:100%;border-left:2px solid #ffd700;padding-left:15px;}
-    .node{position:relative;margin:30px 0;padding-left:20px;}
-    .node::before{content:"";position:absolute;left:-12px;top:0;width:18px;height:18px;border-radius:50%;
-      background:#ffd700;box-shadow:0 0 20px #ffd700;}
-    .node h3{color:#ffd700;margin-bottom:5px;}
-
-    .achievements{display:flex;flex-wrap:wrap;justify-content:center;gap:20px;}
-    .badge{padding:20px;border-radius:12px;background:linear-gradient(135deg,#222,#111);
-           color:#fff;font-weight:600;box-shadow:0 5px 25px rgba(0,0,0,.6);transition:.3s;
-           max-width:280px;text-align:center;font-size:0.95rem;}
-    .badge h3{color:#ffd700;margin-bottom:8px;font-size:1.1rem;}
-    .badge a{display:inline-block;margin-top:8px;color:#ffd700;text-decoration:none;font-weight:600;font-size:0.9rem;}
-    .badge a:hover{color:#40c9ff;}
-    .badge:hover{transform:scale(1.05) rotate(-1deg);}
-
-    footer{padding:30px;text-align:center;background:rgba(0,0,0,0.7);}
-    footer a{color:#ffd700;margin:0 10px;font-size:1.1rem;transition:.3s;}
-    footer a:hover{color:#ff4d6d;}
-
-    /* Responsive */
-    @media(max-width:768px){
-      nav{display:none;} /* hide top nav */
-      .hamburger{display:flex;}
-      section{padding:60px 5%;}
-      .chip{font-size:0.85rem;padding:10px 15px;}
-      .badge{max-width:90%;}
-      .timeline{border-left:none;}
-      .node{padding-left:0;margin:20px 0;}
-      .node::before{display:none;}
-    }
-
-    @media(max-width:480px){
-      header h1{font-size:2rem;}
-      .iit-badge{width:120px;height:120px;font-size:0.9rem;}
-      section h2{font-size:1.6rem;}
-    }
-  </style>
-</head>
-<body>
-  <div class="ribbon"></div>
-
-  <!-- Hamburger for mobile -->
-  <div class="hamburger" id="hamburger">
-    <div></div><div></div><div></div>
+<section class="panel" aria-live="polite">
+  <div class="panel-body" id="panelBody"></div>
+  <div class="panel-foot">
+    <button class="step" id="prev" type="button"></button>
+    <button class="step" id="next" type="button"></button>
   </div>
+</section>
 
-  <!-- Sidebar -->
-  <div class="sidebar" id="sidebar">
-    <a href="#about">About</a>
-    <a href="#skills">Skills</a>
-    <a href="#experience">Experience</a>
-    <a href="#projects">Projects</a>
-    <a href="#leetcode">Explainers</a>
-    <a href="#achievements">Achievements</a>
-    <a href="#education">Education</a>
-    <a href="#contact">Contact</a>
-  </div>
-  <div class="overlay" id="overlay"></div>
+<nav class="nav" id="nav" aria-label="Resume sections"></nav>
 
-  <!-- Desktop Nav -->
-  <nav>
-    <a href="#about">About</a><a href="#skills">Skills</a><a href="#experience">Experience</a>
-    <a href="#projects">Projects</a><a href="#leetcode">Explainers</a>
-    <a href="#achievements">Achievements</a><a href="#education">Education</a><a href="#contact">Contact</a>
-  </nav>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/controls/OrbitControls.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/shaders/CopyShader.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/shaders/LuminosityHighPassShader.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/shaders/GammaCorrectionShader.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/postprocessing/EffectComposer.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/postprocessing/RenderPass.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/postprocessing/ShaderPass.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/postprocessing/UnrealBloomPass.js"></script>
+<script>
+(function () {
+  'use strict';
+  var YEARS = (new Date().getFullYear() - 2019) + '+';
 
-  <!-- Hero -->
-  <header>
-    <h1>Suraj Prakash</h1>
-    <h2>Senior Node.js & Full-Stack Developer</h2>
-    <div class="subtitle">Engineer • Innovator • Proud IITian</div>
-    <div class="iit-badge">IIT<br>Guwahati</div>
-  </header>
+  // ---------------- Resume content ----------------
+  var SECTIONS = [
+    { id: 'profile', des: 'U1', label: 'Profile', html:
+      '<div class="eyebrow">U1 · Profile</div>' +
+      '<h2>Suraj Prakash</h2>' +
+      '<p class="muted">Senior Node.js &amp; Full-Stack Developer · Hyderabad, India</p>' +
+      '<p>Full-stack developer specialising in Node.js, React and AWS, building scalable systems end to end.</p>' +
+      '<p class="muted">Electrical engineering training at IIT Guwahati shaped how I work: start from first principles, measure carefully, and stay with a hard problem until it gives way. I also build animated explainers that make tricky algorithms easy to see.</p>' +
+      '<div class="facts"><div class="fact"><strong>' + YEARS + '</strong><span>Years in software</span></div><div class="fact"><strong>4</strong><span>Companies</span></div><div class="fact"><strong>3</strong><span>Live explainers</span></div></div>' +
+      '<div class="cta"><button class="btn solid" data-go="experience" type="button">See experience</button><button class="btn" data-go="contact" type="button">Get in touch</button></div>' },
+    { id: 'experience', des: 'U2', label: 'Experience', html:
+      '<div class="eyebrow">U2 · Experience</div><h2>Where I\'ve worked</h2>' +
+      '<ul class="list">' +
+      '<li><div class="row"><h3>HTC Global Services<span class="now">Now</span></h3><span class="mono">2024 – present</span></div><span class="muted">Senior Node.js Developer</span></li>' +
+      '<li><div class="row"><h3>Stackbox Services</h3><span class="mono">2021 – 2024</span></div><span class="muted">Full-Stack Developer</span></li>' +
+      '<li><div class="row"><h3>Vashishtha Research</h3><span class="mono">2019 – 2021</span></div><span class="muted">Scientific Software Developer</span></li>' +
+      '<li><div class="row"><h3>poboT Labs</h3><span class="mono">2019</span></div><span class="muted">Associate Research Engineer</span></li>' +
+      '</ul>' },
+    { id: 'skills', des: 'U3', label: 'Skills', html:
+      '<div class="eyebrow">U3 · Skills</div><h2>Toolkit</h2>' +
+      '<div class="group"><span class="k">Backend &amp; cloud</span><div class="chips"><span class="chip core">Node.js</span><span class="chip core">AWS</span><span class="chip">Databases</span></div></div>' +
+      '<div class="group"><span class="k">Languages</span><div class="chips"><span class="chip core">JavaScript</span><span class="chip core">TypeScript</span><span class="chip">Python</span><span class="chip">C++</span></div></div>' +
+      '<div class="group"><span class="k">Frontend</span><div class="chips"><span class="chip core">React</span></div></div>' +
+      '<div class="group"><span class="k">Data</span><div class="chips"><span class="chip">Machine Learning</span></div></div>' },
+    { id: 'projects', des: 'U4', label: 'Projects', html:
+      '<div class="eyebrow">U4 · Projects</div><h2>Engineering projects</h2>' +
+      '<ul class="list">' +
+      '<li><span class="k">Signal processing</span><h3>Lock-in Amplifier</h3><span class="muted">Extracts weak signals buried deep in noise.</span></li>' +
+      '<li><span class="k">Embedded</span><h3>Bluetooth Robot</h3><span class="muted">Arduino robot driven from an Android app over Bluetooth.</span></li>' +
+      '<li><span class="k">Machine learning</span><h3>Gender Detection</h3><span class="muted">Classifies speaker gender from speech audio.</span></li>' +
+      '</ul>' },
+    { id: 'explainers', des: 'U5', label: 'Explainers', html:
+      '<div class="eyebrow">U5 · Explainers</div><h2>Algorithm explainers</h2>' +
+      '<p class="muted">Step-by-step animated walkthroughs of hard LeetCode problems, hosted on GitHub Pages.</p>' +
+      '<ul class="list">' +
+      '<li><h3>N-Queens Visualizer</h3><span class="mono">Backtracking</span><div class="cta" style="margin-top:6px"><a class="btn solid" href="https://spd1996.github.io/N-Queens/" target="_blank" rel="noopener">Live demo</a><a class="btn" href="https://github.com/spd1996/N-Queens" target="_blank" rel="noopener">Source</a></div></li>' +
+      '<li><h3>Binary Tree Traversals</h3><span class="mono">Inorder traversal</span><div class="cta" style="margin-top:6px"><a class="btn solid" href="https://spd1996.github.io/binary_tree/" target="_blank" rel="noopener">Live demo</a><a class="btn" href="https://github.com/spd1996/binary_tree" target="_blank" rel="noopener">Source</a></div></li>' +
+      '<li><h3>Number of Islands</h3><span class="mono">Depth-first search</span><div class="cta" style="margin-top:6px"><a class="btn solid" href="https://spd1996.github.io/Number_Of_Islands/" target="_blank" rel="noopener">Live demo</a><a class="btn" href="https://github.com/spd1996/Number_Of_Islands" target="_blank" rel="noopener">Source</a></div></li>' +
+      '</ul>' },
+    { id: 'distinctions', des: 'U6', label: 'Distinctions', html:
+      '<div class="eyebrow">U6 · Distinctions</div><h2>Ranks &amp; selections</h2>' +
+      '<ul class="list">' +
+      '<li class="rank"><b class="n">181</b><div><h3>KVPY Scholar</h3><span class="muted">All India Rank 181</span></div></li>' +
+      '<li class="rank"><b class="n">1919</b><div><h3>JEE Advanced</h3><span class="muted">All India Rank 1919</span></div></li>' +
+      '<li class="rank"><b class="n w">IISc</b><div><h3>Selected</h3><span class="muted">Indian Institute of Science</span></div></li>' +
+      '<li class="rank"><b class="n w">SCRA</b><div><h3>UPSC interview</h3><span class="muted">Special Class Railway Apprentice</span></div></li>' +
+      '</ul>' },
+    { id: 'education', des: 'U7', label: 'Education', html:
+      '<div class="eyebrow">U7 · Education</div><h2>Education</h2>' +
+      '<ul class="list">' +
+      '<li><div class="row"><h3>IIT Guwahati</h3><span class="mono">2015 – 2019</span></div><span class="muted">B.Tech, Electronics &amp; Electrical Engineering</span><span class="mono">CGPA 7.01</span></li>' +
+      '<li><div class="row"><h3>Vidya Niketan</h3><span class="mono">2015</span></div><span class="muted">Senior Secondary</span><span class="mono">93.8%</span></li>' +
+      '</ul>' },
+    { id: 'contact', des: 'J1', label: 'Contact', html:
+      '<div class="eyebrow">J1 · Contact</div><h2>Get in touch</h2>' +
+      '<ul class="list contact">' +
+      '<li><span class="k">Email</span><span><span class="v" id="c-email">surajprakash597@gmail.com</span><button class="copy" data-copy="c-email" type="button">Copy</button></span></li>' +
+      '<li><span class="k">Phone</span><span><span class="v" id="c-phone">+91 76438 61719</span><button class="copy" data-copy="c-phone" type="button">Copy</button></span></li>' +
+      '<li><span class="k">Based</span><span>Hyderabad, India</span></li>' +
+      '<li><span class="k">LinkedIn</span><a href="https://linkedin.com/in/suraj597" target="_blank" rel="noopener">in/suraj597</a></li>' +
+      '<li><span class="k">GitHub</span><a href="https://github.com/spd1996" target="_blank" rel="noopener">spd1996</a></li>' +
+      '</ul>' }
+  ];
+  var byId = {}; SECTIONS.forEach(function (s, i) { s.index = i; byId[s.id] = s; });
 
-  <!-- About -->
-  <section id="about"><div class="panel"><h2>About Me</h2>
-    <p>I’m a Full-Stack Developer with expertise in Node.js, React, AWS, and scalable systems. Being an IITian (IIT Guwahati, B.Tech EEE) gives me not just technical skills but also the perseverance and innovation mindset to solve complex challenges.</p></div>
-  </section>
+  // ---------------- Panel + nav UI ----------------
+  var panelBody = document.getElementById('panelBody');
+  var prevBtn = document.getElementById('prev'), nextBtn = document.getElementById('next');
+  var nav = document.getElementById('nav');
+  SECTIONS.forEach(function (s) {
+    var b = document.createElement('button');
+    b.type = 'button'; b.dataset.id = s.id;
+    b.innerHTML = '<span>' + s.des + '</span>' + s.label;
+    b.addEventListener('click', function () { select(s.id, true); });
+    nav.appendChild(b);
+  });
+  var homeBtn = document.createElement('button');
+  homeBtn.type = 'button'; homeBtn.className = 'home'; homeBtn.innerHTML = '<span>◱</span>Whole board';
+  homeBtn.addEventListener('click', function () { flyOverview(); });
+  nav.appendChild(homeBtn);
 
-  <!-- Skills -->
-  <section id="skills"><h2>Skills</h2>
-    <div class="skills">
-      <div class="chip">JavaScript/TypeScript</div>
-      <div class="chip">Node.js</div>
-      <div class="chip">React</div>
-      <div class="chip">Python</div>
-      <div class="chip">C++</div>
-      <div class="chip">AWS</div>
-      <div class="chip">Databases</div>
-      <div class="chip">Machine Learning</div>
-    </div>
-  </section>
+  panelBody.addEventListener('click', function (e) {
+    var go = e.target.closest('[data-go]');
+    if (go) { select(go.dataset.go, true); return; }
+    var cp = e.target.closest('[data-copy]');
+    if (cp) {
+      var el = document.getElementById(cp.dataset.copy);
+      var reset = function (t) { cp.textContent = t; setTimeout(function () { cp.textContent = 'Copy'; }, 1500); };
+      var fallback = function () { var r = document.createRange(); r.selectNodeContents(el); var s = getSelection(); s.removeAllRanges(); s.addRange(r); reset('Selected'); };
+      try { navigator.clipboard.writeText(el.textContent).then(function () { reset('Copied'); }, fallback); } catch (err) { fallback(); }
+    }
+  });
+  prevBtn.addEventListener('click', function () { step(-1); });
+  nextBtn.addEventListener('click', function () { step(1); });
+  window.addEventListener('keydown', function (e) {
+    if (e.target.closest && e.target.closest('input,textarea')) return;
+    if (e.key === 'ArrowRight') step(1);
+    if (e.key === 'ArrowLeft') step(-1);
+  });
+  var current = 'profile';
+  function step(d) { var i = (byId[current].index + d + SECTIONS.length) % SECTIONS.length; select(SECTIONS[i].id, true); }
+  function renderPanel(id) {
+    var s = byId[id];
+    panelBody.innerHTML = s.html;
+    panelBody.scrollTop = 0;
+    var p = SECTIONS[(s.index - 1 + SECTIONS.length) % SECTIONS.length], n = SECTIONS[(s.index + 1) % SECTIONS.length];
+    prevBtn.textContent = '← ' + p.des + ' ' + p.label;
+    nextBtn.textContent = n.des + ' ' + n.label + ' →';
+    nav.querySelectorAll('button[data-id]').forEach(function (b) { b.setAttribute('aria-current', String(b.dataset.id === id)); });
+  }
+  renderPanel('profile');
 
-  <!-- Experience -->
-  <section id="experience"><h2>Experience</h2>
-    <div class="timeline">
-      <div class="node"><h3>HTC Global Services</h3><p>Senior Node.js Dev | 2024–Present</p></div>
-      <div class="node"><h3>Stackbox Services</h3><p>Full Stack Dev | 2021–2024</p></div>
-      <div class="node"><h3>Vashishtha Research</h3><p>Scientific Software Dev | 2019–2021</p></div>
-      <div class="node"><h3>poboT Labs</h3><p>Assoc Research Eng | 2019</p></div>
-    </div>
-  </section>
+  if (typeof THREE === 'undefined') return;
 
-  <!-- Projects -->
-  <section id="projects"><h2>Projects</h2>
-    <div class="panel"><h3>Lock-in Amplifier</h3><p>Extracting weak signals buried in noise.</p></div>
-    <div class="panel"><h3>Bluetooth Robot</h3><p>Arduino robot controlled via Android.</p></div>
-    <div class="panel"><h3>Gender Detection</h3><p>ML-based speech analysis.</p></div>
-  </section>
+  // ---------------- Three.js scene ----------------
+  var reduce = matchMedia('(prefers-reduced-motion: reduce)').matches;
+  var canvas = document.getElementById('board');
+  var renderer = new THREE.WebGLRenderer({ canvas: canvas, antialias: true });
+  renderer.setPixelRatio(Math.min(devicePixelRatio, 2));
+  renderer.outputEncoding = THREE.sRGBEncoding;
+  renderer.shadowMap.enabled = true;
+  renderer.shadowMap.type = THREE.PCFSoftShadowMap;
+  renderer.setClearColor(0x07090b);
 
-  <!-- LeetCode Explainers -->
-  <section id="leetcode">
-    <h2>LeetCode Explainers</h2>
-    <p style="text-align:center;max-width:800px;margin:0 auto 40px;">
-      I create interactive explainers for tough LeetCode problems with step-by-step animations and visualizations.  
-      These are hosted on GitHub Pages so anyone can explore them 🚀
-    </p>
+  var scene = new THREE.Scene();
+  scene.fog = new THREE.Fog(0x07090b, 70, 160);
+  var camera = new THREE.PerspectiveCamera(40, 1, 0.1, 400);
+  var controls = new THREE.OrbitControls(camera, canvas);
+  controls.enableDamping = true; controls.dampingFactor = 0.08;
+  controls.minDistance = 8; controls.maxDistance = 120;
+  controls.maxPolarAngle = 1.28;
+  controls.screenSpacePanning = false;
 
-    <div class="achievements">
-      <div class="badge">
-        <h3>🧩 N-Queens Visualizer</h3>
-        <p>Backtracking explainer with animation</p>
-        <a href="https://spd1996.github.io/N-Queens/" target="_blank">Live Demo 🚀</a><br>
-        <a href="https://github.com/spd1996/N-Queens" target="_blank">Source Code 💻</a>
-      </div>
+  // simple studio environment for metal reflections
+  (function () {
+    var env = new THREE.Scene();
+    env.add(new THREE.Mesh(new THREE.BoxGeometry(30, 30, 30), new THREE.MeshBasicMaterial({ color: 0x0b0c0e, side: THREE.BackSide })));
+    function strip(x, y, z, w, h, c, k, ry, rx) {
+      var m = new THREE.MeshBasicMaterial({ color: new THREE.Color(c).multiplyScalar(k), side: THREE.DoubleSide });
+      var p = new THREE.Mesh(new THREE.PlaneGeometry(w, h), m); p.position.set(x, y, z); p.rotation.set(rx || 0, ry || 0, 0); env.add(p);
+    }
+    strip(0, 14, 0, 18, 6, 0xfff1d8, 3, 0, Math.PI / 2);
+    strip(-14, 4, 0, 10, 5, 0xffd9a0, 1.6, Math.PI / 2);
+    strip(14, 6, -4, 8, 4, 0xbfd4ff, 1.2, -Math.PI / 2);
+    var pm = new THREE.PMREMGenerator(renderer);
+    scene.environment = pm.fromScene(env, 0.04).texture;
+  })();
 
-      <div class="badge">
-        <h3>🌲 Binary Tree Traversals</h3>
-        <p>Inorder</p>
-        <a href="https://spd1996.github.io/binary_tree/" target="_blank">Live Demo 🚀</a><br>
-        <a href="https://github.com/spd1996/binary_tree.git" target="_blank">Source Code 💻</a>
-      </div>
+  scene.add(new THREE.HemisphereLight(0xfff0dc, 0x0a0b0d, 0.35));
+  var key = new THREE.DirectionalLight(0xfff2de, 1.1);
+  key.position.set(-18, 30, 16); key.castShadow = true;
+  key.shadow.mapSize.set(2048, 2048);
+  Object.assign(key.shadow.camera, { left: -30, right: 30, top: 24, bottom: -24, near: 1, far: 90 });
+  key.shadow.bias = -0.0006;
+  scene.add(key);
+  var rim = new THREE.DirectionalLight(0x9fb6ff, 0.35); rim.position.set(20, 10, -20); scene.add(rim);
+  var focusLight = new THREE.PointLight(0xffc56b, 1.4, 16, 2); focusLight.position.set(0, 5, 0); scene.add(focusLight);
 
-      <div class="badge">
-        <h3>🌊 Number of Islands Visualizer</h3>
-        <p>DFS</p>
-        <a href="https://spd1996.github.io/Number_Of_Islands/" target="_blank">Live Demo 🚀</a><br>
-        <a href="https://github.com/spd1996/Number_Of_Islands" target="_blank">Source Code 💻</a>
-      </div>
-    </div>
-  </section>
+  // seeded random so the board layout is stable
+  var seedN = 20260; function rnd() { seedN = (seedN * 16807) % 2147483647; return (seedN - 1) / 2147483646; }
 
-  <!-- Achievements -->
-  <section id="achievements"><h2>Achievements</h2>
-    <div class="achievements">
-      <div class="badge">🏆 KVPY Scholar (AIR 181)</div>
-      <div class="badge">🎓 IISc Selection</div>
-      <div class="badge">🛡️ SCRA UPSC Interview</div>
-      <div class="badge">🔥 JEE Advanced AIR 1919</div>
-    </div>
-  </section>
+  var BW = 48, BD = 32;
+  var CHIPS = [
+    { id: 'profile', des: 'U1', name: 'PROFILE', x: 0, z: 0, w: 7, d: 7, h: 0.9, main: true },
+    { id: 'experience', des: 'U2', name: 'EXPERIENCE', part: 'HTC · STACKBOX · 2019–NOW', x: -13, z: -7, w: 6, d: 4.5, h: 0.7 },
+    { id: 'skills', des: 'U3', name: 'SKILLS', part: 'NODE · REACT · AWS', x: 13, z: -7, w: 6, d: 4.5, h: 0.7 },
+    { id: 'projects', des: 'U4', name: 'PROJECTS', part: 'LOCK-IN · ROBOT · ML', x: -13, z: 7, w: 6, d: 4.5, h: 0.7 },
+    { id: 'explainers', des: 'U5', name: 'EXPLAINERS', part: 'N-QUEENS · TREES · DFS', x: 13, z: 7, w: 6, d: 4.5, h: 0.7 },
+    { id: 'distinctions', des: 'U6', name: 'DISTINCTIONS', part: 'KVPY AIR 181 · JEE AIR 1919', x: 0, z: -11, w: 8, d: 3, h: 0.6 },
+    { id: 'education', des: 'U7', name: 'EDUCATION', part: 'IIT GUWAHATI · EEE · 2019', x: 0, z: 11, w: 8, d: 3, h: 0.6 },
+    { id: 'contact', des: 'J1', name: 'CONTACT', part: 'HYDERABAD', x: -21.4, z: 0, w: 2.4, d: 7, h: 0.5, connector: true }
+  ];
 
-  <!-- Education -->
-  <section id="education"><h2>Education</h2>
-    <div class="panel"><h3>IIT Guwahati</h3><p>B.Tech EEE | 2015–2019 | CGPA 7.01</p></div>
-    <div class="panel"><h3>Vidya Niketan</h3><p>Senior Secondary | 2015 | 93.8%</p></div>
-  </section>
+  // board
+  var boardMat = new THREE.MeshStandardMaterial({ color: 0x0e1210, roughness: 0.78, metalness: 0.1 });
+  var board = new THREE.Mesh(new THREE.BoxGeometry(BW, 1, BD), boardMat);
+  board.position.y = -0.5; board.receiveShadow = true; scene.add(board);
+  var edgeMat = new THREE.MeshStandardMaterial({ color: 0xb08a4a, roughness: 0.5, metalness: 0.6 });
+  var edge = new THREE.Mesh(new THREE.BoxGeometry(BW + 0.06, 0.12, BD + 0.06), edgeMat); edge.position.y = -0.98; scene.add(edge);
 
-  <!-- Contact -->
-  <section id="contact"><h2>Contact</h2>
-    <div class="panel"><p>📧 surajprakash597@gmail.com | 📞 +91-7643861719 | 📍 Bangalore, India</p>
-    <p><a href="https://linkedin.com/in/suraj597" target="_blank" style="color: #ccc;">LinkedIn</a> | <a href="https://github.com/spd1996" target="_blank" style="color:white;">GitHub</a></p></div>
-  </section>
+  var goldMat = new THREE.MeshStandardMaterial({ color: 0xd6a14a, metalness: 1, roughness: 0.32 });
+  var silverMat = new THREE.MeshStandardMaterial({ color: 0xc9ccd1, metalness: 1, roughness: 0.28 });
 
-  <footer><p>© 2025 Suraj Prakash | Portfolio 🎖️</p></footer>
+  // ---------- traces ----------
+  var paths = [];
+  function addPath(pts, chip) { paths.push({ pts: pts.map(function (p) { return new THREE.Vector3(p[0], 0.03, p[1]); }), chip: chip }); }
+  [['experience', -13, -7], ['skills', 13, -7], ['projects', -13, 7], ['explainers', 13, 7]].forEach(function (c) {
+    var sx = Math.sign(c[1]), sz = Math.sign(c[2]);
+    for (var k = 0; k < 3; k++) {
+      var z0 = sz * (2.6 - 0.6 * k), xm = sx * (7.4 + 0.6 * k), zt = c[2] + sz * (0.6 - 0.6 * k);
+      addPath([[sx * 3.5, z0], [xm, z0], [xm, zt], [c[1] - sx * 3, zt]], c[0]);
+    }
+  });
+  [['distinctions', -11], ['education', 11]].forEach(function (c) {
+    var sz = Math.sign(c[1]);
+    [-1.8, -0.6, 0.6, 1.8].forEach(function (x) { addPath([[x, sz * 3.5], [x, c[1] - sz * 1.5]], c[0]); });
+  });
+  [-0.6, 0, 0.6].forEach(function (z) { addPath([[-3.5, z], [-20.2, z]], 'contact'); });
+  [-0.5, 0.5].forEach(function (z) { addPath([[3.5, z], [20.2, z]], 'crystal'); });
+  // decorative escape traces from the main chip corners
+  [[-1, -1], [1, -1], [-1, 1], [1, 1]].forEach(function (s) {
+    addPath([[s[0] * 3.0, s[1] * 3.5], [s[0] * 3.0, s[1] * 5.2], [s[0] * 5.4, s[1] * 5.2]], 'deco');
+  });
 
-  <script>
-    const hamburger = document.getElementById("hamburger");
-    const sidebar = document.getElementById("sidebar");
-    const overlay = document.getElementById("overlay");
+  var segs = [];
+  paths.forEach(function (p) {
+    p.cum = [0];
+    for (var i = 1; i < p.pts.length; i++) {
+      var a = p.pts[i - 1], b = p.pts[i];
+      p.cum.push(p.cum[i - 1] + a.distanceTo(b));
+      segs.push([a, b]);
+    }
+    p.len = p.cum[p.cum.length - 1];
+  });
+  var TW = 0.2;
+  var traceMesh = new THREE.InstancedMesh(new THREE.BoxGeometry(1, 0.04, 1), goldMat, segs.length);
+  var dummy = new THREE.Object3D();
+  segs.forEach(function (s, i) {
+    var a = s[0], b = s[1];
+    dummy.position.set((a.x + b.x) / 2, 0.02, (a.z + b.z) / 2);
+    dummy.scale.set(Math.abs(b.x - a.x) + TW, 1, Math.abs(b.z - a.z) + TW);
+    dummy.rotation.set(0, 0, 0); dummy.updateMatrix();
+    traceMesh.setMatrixAt(i, dummy.matrix);
+  });
+  traceMesh.receiveShadow = true; scene.add(traceMesh);
 
-    hamburger.addEventListener("click", () => {
-      sidebar.classList.toggle("active");
-      overlay.classList.toggle("active");
+  // vias: at trace corners plus a scatter in empty areas
+  var viaPts = [];
+  paths.forEach(function (p) { for (var i = 1; i < p.pts.length - 1; i++) viaPts.push([p.pts[i].x, p.pts[i].z]); });
+  function freeAt(x, z) {
+    for (var i = 0; i < CHIPS.length; i++) { var c = CHIPS[i]; if (Math.abs(x - c.x) < c.w / 2 + 1.2 && Math.abs(z - c.z) < c.d / 2 + 1.2) return false; }
+    if (Math.abs(x - 21) < 2 && Math.abs(z) < 3) return false;
+    for (var j = 0; j < segs.length; j++) {
+      var a = segs[j][0], b = segs[j][1];
+      if (x > Math.min(a.x, b.x) - 0.5 && x < Math.max(a.x, b.x) + 0.5 && z > Math.min(a.z, b.z) - 0.5 && z < Math.max(a.z, b.z) + 0.5) return false;
+    }
+    return Math.abs(x) < BW / 2 - 1.5 && Math.abs(z) < BD / 2 - 1.5;
+  }
+  for (var vi = 0; vi < 600 && viaPts.length < 170; vi++) {
+    var vx = Math.round((rnd() - 0.5) * BW / 0.8) * 0.8, vz = Math.round((rnd() - 0.5) * BD / 0.8) * 0.8;
+    if (freeAt(vx, vz)) viaPts.push([vx, vz]);
+  }
+  var viaMesh = new THREE.InstancedMesh(new THREE.CylinderGeometry(0.17, 0.17, 0.06, 12), goldMat, viaPts.length);
+  viaPts.forEach(function (v, i) { dummy.position.set(v[0], 0.03, v[1]); dummy.scale.set(1, 1, 1); dummy.updateMatrix(); viaMesh.setMatrixAt(i, dummy.matrix); });
+  scene.add(viaMesh);
+  var holeMesh = new THREE.InstancedMesh(new THREE.CylinderGeometry(0.07, 0.07, 0.08, 8), new THREE.MeshBasicMaterial({ color: 0x050505 }), viaPts.length);
+  viaPts.forEach(function (v, i) { dummy.position.set(v[0], 0.04, v[1]); dummy.updateMatrix(); holeMesh.setMatrixAt(i, dummy.matrix); });
+  scene.add(holeMesh);
+
+  // mounting holes
+  [[-1, -1], [1, -1], [-1, 1], [1, 1]].forEach(function (s) {
+    var ring = new THREE.Mesh(new THREE.TorusGeometry(0.75, 0.22, 10, 32), goldMat);
+    ring.rotation.x = Math.PI / 2; ring.position.set(s[0] * (BW / 2 - 1.6), 0.02, s[1] * (BD / 2 - 1.6)); scene.add(ring);
+    var hole = new THREE.Mesh(new THREE.CylinderGeometry(0.55, 0.55, 0.1, 24), new THREE.MeshBasicMaterial({ color: 0x030303 }));
+    hole.position.copy(ring.position); scene.add(hole);
+  });
+
+  // crystal Y1 (decorative)
+  var can = new THREE.Mesh(new THREE.BoxGeometry(1.6, 0.8, 3.4), silverMat);
+  can.position.set(21, 0.4, 0); can.castShadow = true; scene.add(can);
+
+  // capacitors
+  var capPts = [];
+  CHIPS.forEach(function (c) {
+    if (c.connector) return;
+    capPts.push([c.x + c.w / 2 + 0.8, c.z - c.d / 2 + 0.4], [c.x - c.w / 2 - 0.8, c.z + c.d / 2 - 0.4]);
+  });
+  var capBody = new THREE.InstancedMesh(new THREE.BoxGeometry(0.34, 0.3, 0.7), new THREE.MeshStandardMaterial({ color: 0x9c7a52, roughness: 0.6 }), capPts.length);
+  var capEnds = new THREE.InstancedMesh(new THREE.BoxGeometry(0.36, 0.32, 0.16), silverMat, capPts.length * 2);
+  capPts.forEach(function (p, i) {
+    dummy.position.set(p[0], 0.16, p[1]); dummy.updateMatrix(); capBody.setMatrixAt(i, dummy.matrix);
+    dummy.position.set(p[0], 0.16, p[1] - 0.33); dummy.updateMatrix(); capEnds.setMatrixAt(i * 2, dummy.matrix);
+    dummy.position.set(p[0], 0.16, p[1] + 0.33); dummy.updateMatrix(); capEnds.setMatrixAt(i * 2 + 1, dummy.matrix);
+  });
+  capBody.castShadow = true; scene.add(capBody, capEnds);
+
+  // ---------- chips (textures need the fonts first) ----------
+  var chipMeshes = [], chipById = {};
+  function fontsReady() {
+    var loads = ['800 80px "Archivo"', '700 40px "JetBrains Mono"', '500 40px "JetBrains Mono"'].map(function (f) { return document.fonts ? document.fonts.load(f) : Promise.resolve(); });
+    return Promise.race([Promise.all(loads), new Promise(function (r) { setTimeout(r, 2500); })]);
+  }
+  function fitFont(ctx, text, weight, family, max, maxW) {
+    var s = max; ctx.font = weight + ' ' + s + 'px ' + family;
+    while (ctx.measureText(text).width > maxW && s > 10) { s -= 2; ctx.font = weight + ' ' + s + 'px ' + family; }
+    return s;
+  }
+  function chipTexture(c) {
+    var scale = 1024 / Math.max(c.w, c.d);
+    var W = Math.round(c.w * scale), H = Math.round(c.d * scale);
+    var cv = document.createElement('canvas'); cv.width = W; cv.height = H;
+    var x = cv.getContext('2d');
+    var g = x.createLinearGradient(0, 0, W, H); g.addColorStop(0, '#1b1f24'); g.addColorStop(1, '#121519');
+    x.fillStyle = g; x.fillRect(0, 0, W, H);
+    x.strokeStyle = 'rgba(255,255,255,0.06)'; x.lineWidth = 6; x.strokeRect(14, 14, W - 28, H - 28);
+    var w = W, h = H;
+    if (c.connector) { x.translate(W / 2, H / 2); x.rotate(-Math.PI / 2); x.translate(-H / 2, -W / 2); w = H; h = W; }
+    var m = Math.min(w, h);
+    x.fillStyle = '#0b0d10'; x.beginPath(); x.arc(w * 0.07 + 10, h * 0.16 + 6, m * 0.045, 0, Math.PI * 2); x.fill();
+    x.fillStyle = '#e6b25a'; x.textBaseline = 'alphabetic';
+    var ff = '"JetBrains Mono", monospace', fd = '"Archivo", Arial, sans-serif';
+    if (c.main) {
+      x.font = '700 ' + Math.round(h * 0.07) + 'px ' + ff; x.fillText('U1 · PROFILE', w * 0.12, h * 0.16);
+      x.fillStyle = '#f1ebdf'; x.font = 'expanded 800 ' + Math.round(h * 0.38) + 'px ' + fd;
+      x.textAlign = 'center'; x.fillText('SP', w / 2, h * 0.62);
+      fitFont(x, 'SURAJ PRAKASH', '700', ff, Math.round(h * 0.075), w * 0.8);
+      x.fillStyle = '#c9c2b4'; x.fillText('SURAJ PRAKASH', w / 2, h * 0.76);
+      fitFont(x, 'FULL-STACK · NODE.JS · IITG', '500', ff, Math.round(h * 0.05), w * 0.8);
+      x.fillStyle = '#7d776d'; x.fillText('FULL-STACK · NODE.JS · IITG', w / 2, h * 0.86);
+    } else {
+      x.font = '700 ' + Math.round(h * 0.13) + 'px ' + ff; x.fillText(c.des, w * 0.12, h * 0.24);
+      x.fillStyle = '#f1ebdf'; x.textAlign = 'center';
+      fitFont(x, c.name, 'expanded 800', fd, Math.round(h * 0.26), w * 0.84);
+      x.fillText(c.name, w / 2, h * 0.62);
+      x.fillStyle = '#857f74';
+      fitFont(x, c.part, '500', ff, Math.round(h * 0.085), w * 0.84);
+      x.fillText(c.part, w / 2, h * 0.84);
+    }
+    var t = new THREE.CanvasTexture(cv);
+    t.encoding = THREE.sRGBEncoding; t.anisotropy = renderer.capabilities.getMaxAnisotropy();
+    return t;
+  }
+  function silkscreen() {
+    var W = 2048, H = Math.round(2048 * BD / BW);
+    var cv = document.createElement('canvas'); cv.width = W; cv.height = H;
+    var x = cv.getContext('2d');
+    var s = W / BW;
+    x.strokeStyle = 'rgba(232,226,214,0.55)'; x.fillStyle = 'rgba(232,226,214,0.6)';
+    x.lineWidth = 3;
+    x.strokeRect(0.6 * s, 0.6 * s, W - 1.2 * s, H - 1.2 * s);
+    // chip outlines with corner ticks
+    CHIPS.forEach(function (c) {
+      var px = (c.x + BW / 2 - c.w / 2 - 0.35) * s, pz = (c.z + BD / 2 - c.d / 2 - 0.35) * s;
+      x.strokeRect(px, pz, (c.w + 0.7) * s, (c.d + 0.7) * s);
     });
-
-    overlay.addEventListener("click", () => {
-      sidebar.classList.remove("active");
-      overlay.classList.remove("active");
+    x.font = '500 22px "JetBrains Mono", monospace';
+    x.fillText('SURAJ PRAKASH · RESUME BOARD', 3.2 * s, 2.0 * s);
+    x.textAlign = 'right';
+    x.fillText('REV 2026 · HYDERABAD 17.385°N 78.487°E', W - 3.2 * s, H - 1.4 * s);
+    x.textAlign = 'left';
+    x.fillText('B.TECH EEE · IIT GUWAHATI · 2015–2019', 3.2 * s, H - 1.4 * s);
+    x.fillText('Y1', (21 + BW / 2 - 0.4) * s, (BD / 2 - 2.4) * s);
+    x.fillText('J1', (-21.4 + BW / 2 - 0.4) * s, (BD / 2 - 4.3) * s);
+    // fiducials
+    [[3.4, 4.2], [BW - 3.4, BD - 4.2]].forEach(function (f) {
+      x.beginPath(); x.arc(f[0] * s, f[1] * s, 0.35 * s, 0, Math.PI * 2); x.stroke();
+      x.beginPath(); x.moveTo((f[0] - 0.6) * s, f[1] * s); x.lineTo((f[0] + 0.6) * s, f[1] * s); x.moveTo(f[0] * s, (f[1] - 0.6) * s); x.lineTo(f[0] * s, (f[1] + 0.6) * s); x.stroke();
     });
+    var t = new THREE.CanvasTexture(cv); t.encoding = THREE.sRGBEncoding; t.anisotropy = renderer.capabilities.getMaxAnisotropy();
+    var plane = new THREE.Mesh(new THREE.PlaneGeometry(BW, BD), new THREE.MeshBasicMaterial({ map: t, transparent: true, depthWrite: false }));
+    plane.rotation.x = -Math.PI / 2; plane.position.y = 0.006; scene.add(plane);
+  }
 
-    // Close sidebar on link click
-    document.querySelectorAll(".sidebar a").forEach(link=>{
-      link.addEventListener("click",()=>{
-        sidebar.classList.remove("active");
-        overlay.classList.remove("active");
-      });
+  function buildChips() {
+    silkscreen();
+    var sideMat = new THREE.MeshStandardMaterial({ color: 0x15181c, roughness: 0.55, metalness: 0.2 });
+    var pinList = [];
+    CHIPS.forEach(function (c) {
+      var top = new THREE.MeshStandardMaterial({ map: chipTexture(c), roughness: 0.62, metalness: 0.15, emissive: 0xffb54a, emissiveIntensity: 0 });
+      var mats = [sideMat, sideMat, top, sideMat, sideMat, sideMat];
+      var mesh = new THREE.Mesh(new THREE.BoxGeometry(c.w, c.h, c.d), mats);
+      mesh.position.set(c.x, c.h / 2 + 0.06, c.z);
+      mesh.castShadow = true; mesh.receiveShadow = true;
+      mesh.userData = { id: c.id, baseY: mesh.position.y, top: top, lift: 0 };
+      var outline = new THREE.LineSegments(new THREE.EdgesGeometry(new THREE.BoxGeometry(c.w + 0.12, c.h + 0.12, c.d + 0.12)), new THREE.LineBasicMaterial({ color: 0xffc56b, transparent: true, opacity: 0 }));
+      mesh.add(outline); mesh.userData.outline = outline;
+      scene.add(mesh); chipMeshes.push(mesh); chipById[c.id] = mesh;
+
+      if (c.connector) {
+        for (var r = 0; r < 2; r++) for (var i = 0; i < 6; i++) pinList.push({ x: c.x - 0.5 + r, z: c.z - 2.75 + i * 1.1, header: true });
+      } else {
+        var step = 0.55;
+        var nx = Math.floor((c.w - 0.6) / step), nz = Math.floor((c.d - 0.6) / step);
+        for (var a = 0; a < nx; a++) {
+          var px = c.x - (nx - 1) * step / 2 + a * step;
+          pinList.push({ x: px, z: c.z - c.d / 2 - 0.22, rot: 0 }, { x: px, z: c.z + c.d / 2 + 0.22, rot: 0 });
+        }
+        if (c.main) for (var b = 0; b < nz; b++) {
+          var pz = c.z - (nz - 1) * step / 2 + b * step;
+          pinList.push({ x: c.x - c.w / 2 - 0.22, z: pz, rot: 1 }, { x: c.x + c.w / 2 + 0.22, z: pz, rot: 1 });
+        }
+      }
     });
-  </script>
-</body>
-</html>
+    var pins = new THREE.InstancedMesh(new THREE.BoxGeometry(0.16, 0.1, 0.5), silverMat, pinList.length);
+    pinList.forEach(function (p, i) {
+      dummy.position.set(p.x, p.header ? 0.95 : 0.08, p.z);
+      dummy.rotation.set(0, p.rot ? Math.PI / 2 : 0, 0);
+      dummy.scale.set(p.header ? 1 : 1, p.header ? 6 : 1, p.header ? 0.32 : 1);
+      dummy.updateMatrix(); pins.setMatrixAt(i, dummy.matrix);
+    });
+    pins.castShadow = true; scene.add(pins);
+    dummy.rotation.set(0, 0, 0); dummy.scale.set(1, 1, 1);
+  }
+
+  // ---------- signal pulses ----------
+  var livePaths = paths.filter(function (p) { return p.chip !== 'deco'; });
+  var pulses = [];
+  livePaths.forEach(function (p) {
+    var n = p.len > 14 ? 2 : 1;
+    for (var k = 0; k < n; k++) pulses.push({ p: p, s: rnd() * p.len, v: 3.5 + rnd() * 3 });
+  });
+  var pulseMesh = new THREE.InstancedMesh(new THREE.SphereGeometry(0.15, 12, 8), new THREE.MeshBasicMaterial({ color: 0xffffff }), pulses.length);
+  var pulseIdle = new THREE.Color(1.0, 0.72, 0.32), pulseHot = new THREE.Color(1.6, 1.35, 0.95);
+  pulses.forEach(function (q, i) { pulseMesh.setColorAt(i, pulseIdle); });
+  scene.add(pulseMesh);
+  function pointOn(p, s, out) {
+    for (var i = 1; i < p.cum.length; i++) {
+      if (s <= p.cum[i]) { var f = (s - p.cum[i - 1]) / (p.cum[i] - p.cum[i - 1]); return out.lerpVectors(p.pts[i - 1], p.pts[i], f); }
+    }
+    return out.copy(p.pts[p.pts.length - 1]);
+  }
+
+  // ---------- post-processing ----------
+  var composer = null, bloom = null;
+  if (THREE.EffectComposer && THREE.UnrealBloomPass && THREE.GammaCorrectionShader) {
+    try {
+      composer = new THREE.EffectComposer(renderer);
+      composer.addPass(new THREE.RenderPass(scene, camera));
+      bloom = new THREE.UnrealBloomPass(new THREE.Vector2(256, 256), 0.75, 0.5, 0.8);
+      composer.addPass(bloom);
+      composer.addPass(new THREE.ShaderPass(THREE.GammaCorrectionShader));
+    } catch (e) { composer = null; }
+  }
+  // the bloom path renders in linear space, so the backdrop and fog colours are linearised to match the page
+  var bgLin = new THREE.Color(0x07090b).convertSRGBToLinear();
+  scene.fog.color.copy(bgLin);
+  renderer.setClearColor(composer ? bgLin : new THREE.Color(0x07090b));
+
+  // ---------- camera moves ----------
+  var goalPos = new THREE.Vector3(), goalTarget = new THREE.Vector3(), flying = false;
+  var VIEW_DIR = new THREE.Vector3(0, 0.74, 0.67).normalize();
+  function isNarrow() { return innerWidth < 760; }
+  function poseFor(x, z, dist) {
+    var narrow = isNarrow();
+    var portrait = innerHeight > innerWidth;
+    var d = dist * (portrait ? 1.7 : 1);
+    var t = new THREE.Vector3(x, 0, z);
+    if (narrow) t.z += d * 0.2; else t.x += d * 0.16;
+    goalTarget.copy(t);
+    goalPos.copy(t).addScaledVector(VIEW_DIR, d);
+    if (reduce) { camera.position.copy(goalPos); controls.target.copy(goalTarget); flying = false; }
+    else flying = true;
+  }
+  function flyOverview() { poseFor(0, 1, 54); }
+  controls.addEventListener('start', function () { flying = false; });
+
+  var selected = 'profile';
+  function select(id, fly) {
+    current = id; selected = id;
+    renderPanel(id);
+    var c = CHIPS.filter(function (k) { return k.id === id; })[0];
+    if (fly) { if (c.main) flyOverview(); else poseFor(c.x, c.z, c.connector ? 17 : 21); }
+    pulses.forEach(function (q, i) { pulseMesh.setColorAt(i, q.p.chip === id || (c.main) ? pulseHot : pulseIdle); });
+    if (pulseMesh.instanceColor) pulseMesh.instanceColor.needsUpdate = true;
+  }
+  window.__select = select;
+
+  // ---------- picking ----------
+  var ray = new THREE.Raycaster(), mouse = new THREE.Vector2(), hovered = null, downAt = null;
+  function pick(e) {
+    var r = canvas.getBoundingClientRect();
+    mouse.set(((e.clientX - r.left) / r.width) * 2 - 1, -((e.clientY - r.top) / r.height) * 2 + 1);
+    ray.setFromCamera(mouse, camera);
+    var hit = ray.intersectObjects(chipMeshes, false)[0];
+    return hit ? hit.object : null;
+  }
+  canvas.addEventListener('pointermove', function (e) {
+    if (e.pointerType !== 'mouse') return;
+    hovered = pick(e);
+    canvas.style.cursor = hovered ? 'pointer' : 'grab';
+  });
+  canvas.addEventListener('pointerleave', function () { hovered = null; });
+  canvas.addEventListener('pointerdown', function (e) { downAt = [e.clientX, e.clientY]; });
+  canvas.addEventListener('pointerup', function (e) {
+    if (!downAt || Math.hypot(e.clientX - downAt[0], e.clientY - downAt[1]) > 6) return;
+    var m = pick(e); if (m) select(m.userData.id, true);
+  });
+
+  // ---------- sizing ----------
+  function resize() {
+    var w = innerWidth, h = innerHeight;
+    renderer.setSize(w, h, false);
+    camera.aspect = w / h; camera.fov = w < 760 ? 46 : 40; camera.updateProjectionMatrix();
+    if (composer) { composer.setPixelRatio(Math.min(devicePixelRatio, 2)); composer.setSize(w, h); }
+  }
+  addEventListener('resize', resize);
+  resize();
+
+  // ---------- start ----------
+  flyOverview();
+  if (!reduce) { camera.position.copy(goalPos).multiplyScalar(1.5).add(new THREE.Vector3(-18, 12, 0)); controls.target.copy(goalTarget); flying = true; }
+
+  fontsReady().then(function () {
+    buildChips();
+    select('profile', false);
+    loop();
+  });
+
+  var clock = new THREE.Clock(), tmp = new THREE.Vector3(), lightGoal = new THREE.Vector3();
+  function loop() {
+    var dt = Math.min(clock.getDelta(), 0.05);
+    var t = clock.elapsedTime;
+
+    if (flying) {
+      var k = 1 - Math.exp(-dt * 2.6);
+      camera.position.lerp(goalPos, k);
+      controls.target.lerp(goalTarget, k);
+      if (camera.position.distanceTo(goalPos) < 0.05) flying = false;
+    }
+    controls.update();
+
+    // pulses
+    var speed = reduce ? 0.25 : 1;
+    pulses.forEach(function (q, i) {
+      var hot = q.p.chip === selected;
+      q.s += q.v * dt * speed * (hot ? 1.8 : 1);
+      if (q.s > q.p.len) q.s -= q.p.len;
+      pointOn(q.p, q.s, tmp);
+      dummy.position.set(tmp.x, 0.13, tmp.z);
+      var sc = hot ? 1.25 : 1;
+      dummy.scale.set(sc, sc, sc); dummy.updateMatrix();
+      pulseMesh.setMatrixAt(i, dummy.matrix);
+    });
+    pulseMesh.instanceMatrix.needsUpdate = true;
+    dummy.scale.set(1, 1, 1);
+
+    // chips: hover lift, selection glow
+    chipMeshes.forEach(function (m) {
+      var u = m.userData;
+      var isSel = u.id === selected, isHov = m === hovered;
+      var lift = isSel ? 0.35 : isHov ? 0.2 : 0;
+      u.lift += (lift - u.lift) * Math.min(1, dt * 8);
+      m.position.y = u.baseY + u.lift;
+      u.outline.material.opacity += ((isSel ? 0.95 : isHov ? 0.5 : 0) - u.outline.material.opacity) * Math.min(1, dt * 8);
+      u.top.emissiveIntensity = isSel ? 0.05 + 0.03 * Math.sin(t * 2.4) : 0;
+    });
+    var sm = chipById[selected];
+    if (sm) { lightGoal.set(sm.position.x, 6, sm.position.z + 1); focusLight.position.lerp(lightGoal, Math.min(1, dt * 4)); }
+
+    if (composer) composer.render(); else renderer.render(scene, camera);
+    requestAnimationFrame(loop);
+  }
+})();
+</script>
